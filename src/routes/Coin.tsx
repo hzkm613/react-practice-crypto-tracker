@@ -1,13 +1,18 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
+
+interface RouteParams {
+  coinId: string;
+}
 
 const Coin = () => {
-  const params = useParams();
-  console.log(params);
-  
+  // Check if coinId is correct
+  const { coinId } = useParams<RouteParams>();
+  // console.log(coinId);
+
   return (
     <div>
-      Coin
+      Coin: {coinId}
     </div>
   )
 }
