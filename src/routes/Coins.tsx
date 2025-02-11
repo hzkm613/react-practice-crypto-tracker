@@ -39,6 +39,11 @@ const Title = styled.h1`
   color:${props => props.theme.accentColor};
 `;
 
+const Loader = styled.span`
+  text-align: center;
+  display: block;
+`;
+
 // Fake data
 // const coins = [{
 //   id: "btc-bitcoin",
@@ -81,12 +86,13 @@ const Title = styled.h1`
 const Coins = () => {
 
   const [ coins, setCoins] = useState<CoinInterface[]>([]);
-  
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async() => {
       const response = await fetch("https://api.coinpaprika.com/v1/coins");
       const json = await response.json();
       setCoins(json.slice(0, 20));
+      setLoading(false);
     })();
   }, []);
 
@@ -96,12 +102,12 @@ const Coins = () => {
       <Header>
         <Title>Coins</Title>
       </Header>
-      <CoinsList>
+      {loading ? (<Loader>Loading...</Loader>) : (<CoinsList>
        {coins.map((coin) =>
           (<Coin key={coin.id}>
             <Link to={`/${coin.id}`}>{coin.name} &rarr;</Link>
           </Coin>))}
-      </CoinsList>
+      </CoinsList>) }   
     </Container>
   )
 }
