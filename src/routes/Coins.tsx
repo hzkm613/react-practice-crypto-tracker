@@ -25,7 +25,9 @@ const Coin = styled.li`
   border-radius: 15px;
   a {
       transition: color 0.2s ease-in;
-      display:block;
+      display:flex;
+      align-items: center;
+      justify-content: start;
   }
     &:hover {
       a {
@@ -42,6 +44,12 @@ const Title = styled.h1`
 const Loader = styled.span`
   text-align: center;
   display: block;
+`;
+
+const CoinIcon = styled.img`
+  width: 25px;
+  height: 25px;
+  margin-right: 14px;
 `;
 
 // Fake data
@@ -105,7 +113,10 @@ const Coins = () => {
       {loading ? (<Loader>Loading...</Loader>) : (<CoinsList>
        {coins.map((coin) =>
           (<Coin key={coin.id}>
-            <Link to={`/${coin.id}`}>{coin.name} &rarr;</Link>
+            <Link to={`/${coin.id}`}>
+              <CoinIcon src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`} alt={coin.name} />
+              {coin.name} &rarr;
+            </Link>
           </Coin>))}
       </CoinsList>) }   
     </Container>
