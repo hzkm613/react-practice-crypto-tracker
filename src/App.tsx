@@ -2,6 +2,13 @@ import { createGlobalStyle } from "styled-components";
 import Router from "./Router";
 
 const GlobalStyle = createGlobalStyle`
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
+font-family: 'Source Sans Pro', sans-serif;
+
+* {
+  box-sizing: border-box;
+}
+  
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -33,7 +40,13 @@ footer, header, hgroup, main, menu, nav, section {
 }
 body {
   line-height: 1;
+  font-family: 'Source Sans Pro', sans-serif;
 }
+
+a {
+  text-decoration: none;
+}
+
 menu, ol, ul {
   list-style: none;
 }
