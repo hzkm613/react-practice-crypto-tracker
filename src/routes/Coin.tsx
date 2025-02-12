@@ -34,6 +34,70 @@ interface RouteState {
   name: string;
 }
 
+interface ITag
+{
+  coin_counter: number;
+  ico_counter: number;
+  id: string;
+  name: string;
+}
+
+interface CoinInfo {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  is_new: boolean;
+  description: string;
+  first_data_at: string;
+  last_data_at: string;
+  hardware_wallet: boolean;
+  hash_algorithm: string;
+  is_active: boolean;
+  message: string;
+  logo: string;
+  open_source: boolean;
+  org_structure: string;
+  platform: string;
+  proof_type: string;
+  started_at: string;
+  tags: ITag[];
+  type: string;
+}
+
+interface PriceInfo {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  total_supply: number;
+  max_supply: number;
+  beta_value: number;
+  first_data_at: string;
+  last_updated: string;
+  quotes: {
+    USD: {
+      price: number;
+      volume_24h: number;
+      market_cap: number;
+      percent_change_1h: number;
+      percent_change_24h: number;
+      percent_change_7d: number;
+      percent_change_30d: number;
+      percent_change_1y: number;
+      percent_change_6h: number;
+      percent_change_12h: number;
+      percent_change_15m: number;
+      percent_change_30m: number;
+      ath_price: number;  
+      ath_date: string;   
+      market_cap_change_24h: number; 
+      volume_24h_change_24h: number; 
+      percent_from_price_ath: number;
+    };
+  };
+}
+
 const Coin = () => {
 
   // Check if coinId is correct
@@ -44,8 +108,8 @@ const Coin = () => {
   // #5.5
   const { state } = useLocation<RouteState>();
   const [loading, setLoading] = useState(true);
-  const [info, setInfo] = useState({});
-  const [priceInto, setPriceInfo] = useState({});
+  const [info, setInfo] = useState<CoinInfo>();
+  const [priceInfo, setPriceInfo] = useState<PriceInfo>();
 
   useEffect(()=> {
     (async()=> {
@@ -55,6 +119,9 @@ const Coin = () => {
         const priceInfo = await(await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
         setInfo(coinInfo);
         setPriceInfo(priceInfo);
+        //console.log(coinInfo);
+        console.log(priceInfo);
+        setLoading(false);
       })();
   }, []);
 
