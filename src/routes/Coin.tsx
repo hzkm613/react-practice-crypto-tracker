@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import Chart from './Chart';
 import Price from './Price';
+import { useQuery } from 'react-query';
+import { fetchCoinInfo, fetchCoinTickers } from '../api';
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -92,7 +94,7 @@ interface ITag
   name: string;
 }
 
-interface CoinInfo {
+interface IInfoData {
   id: string;
   name: string;
   symbol: string;
@@ -115,7 +117,7 @@ interface CoinInfo {
   type: string;
 }
 
-interface PriceInfo {
+interface IPriceData {
   id: string;
   name: string;
   symbol: string;
@@ -155,57 +157,62 @@ const Coin = () => {
   // const location = useLocation();
   // console.log(location);
   const { state } = useLocation<RouteState>();
-  const [loading, setLoading] = useState(true);
-  const [info, setInfo] = useState<CoinInfo>();
-  const [priceInfo, setPriceInfo] = useState<PriceInfo>();
-
+  // const [loading, setLoading] = useState(true);
+  // const [info, setInfo] = useState<CoinInfo>();
+  // const [priceInfo, setPriceInfo] = useState<PriceInfo>();
+  const {isLoading: infoLoading, data: infoData} = useQuery<IInfoData>(["info", coinId], () => fetchCoinInfo(coinId));
+  const {isLoading: tickerLoading, data: tickerData} = useQuery<IPriceData>(["tickers", coinId], () => fetchCoinTickers(coinId));
+  
+  const loading = infoLoading || tickerLoading;
+  
   // Check if I am in the specific URL
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
 
-  useEffect(()=> {
-    (async()=> {
-      const coinInfo = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-        ).json();
-        const priceInfo = await(await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
-        setInfo(coinInfo);
-        setPriceInfo(priceInfo);
-        // console.log(coinInfo);
-        // console.log(priceInfo);
-        setLoading(false);
-      })();
-  }, [coinId]); // When the coinId changes it runs the code again
+  // useEffect(()=> {
+  //   (async()=> {
+  //     const coinInfo = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+  //       ).json();
+  //       const priceInfo = await(await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
+  //       setInfo(coinInfo);
+  //       setPriceInfo(priceInfo);
+  //       // console.log(coinInfo);
+  //       // console.log(priceInfo);
+  //       setLoading(false);
+  //     })();
+  // }, [coinId]); // When the coinId changes it runs the code again
+
 
   return (
     <Container>
       <Header>
-        <Title>{state?.name ? state.name : loading ? "Loading..." : info?.name}</Title>
+        <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
       </Header>
       {loading ? (<Loader>Loading...</Loader>) : 
       (
         <>
          <Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
          </Overview>
         <Overview>
           <OverviewItem>
             <span>Rank: </span>
-            <span>{info?.rank}</span>
+            <span>{infoData?.rank}</span>
           </OverviewItem>
           <OverviewItem>
             <span>Symbol: </span>
-            <span>{info?.symbol}</span>
+            <span>{infoData?.symbol}</span>
           </OverviewItem>
           </Overview>
           <Overview>
           <OverviewItem>
             <span>Total Supply:</span>
-            <span>{priceInfo?.total_supply}</span>
+            <span>{tickerData?.total_supply}</span>
           </OverviewItem>
           <OverviewItem>
             <span>Max Supply: </span>
-            <span>{priceInfo?.max_supply}</span>
+            <span>{tickerData?.max_supply}</span>
           </OverviewItem>
           </Overview>
 

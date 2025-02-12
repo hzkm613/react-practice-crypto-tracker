@@ -107,7 +107,6 @@ const Coins = () => {
   // }, []);
 
   return (
-
     <Container>
       <Header>
         <Title>Coins</Title>
