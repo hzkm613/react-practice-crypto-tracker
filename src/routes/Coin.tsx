@@ -26,6 +26,31 @@ const Loader = styled.span`
   display: block;
 `;
 
+const Overview = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-bottom:20px;
+`;
+
+const OverviewItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  span:first-child {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+`;
+
+const Description = styled.p`
+  margin: 20px 0px;
+`;
+
 interface RouteParams {
   coinId: string;
 }
@@ -99,13 +124,11 @@ interface PriceInfo {
 }
 
 const Coin = () => {
-
   // Check if coinId is correct
   const { coinId } = useParams<RouteParams>();
   // console.log(coinId);
   // const location = useLocation();
   // console.log(location);
-  // #5.5
   const { state } = useLocation<RouteState>();
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState<CoinInfo>();
@@ -119,18 +142,45 @@ const Coin = () => {
         const priceInfo = await(await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
         setInfo(coinInfo);
         setPriceInfo(priceInfo);
-        //console.log(coinInfo);
-        console.log(priceInfo);
+        // console.log(coinInfo);
+        // console.log(priceInfo);
         setLoading(false);
       })();
-  }, []);
+  }, [coinId]); // When the coinId changes it runs the code again
 
   return (
     <Container>
       <Header>
-        <Title>{state?.name || "Loading..."}</Title>
+        <Title>{state?.name ? state.name : loading ? "Loading..." : info?.name}</Title>
       </Header>
-      {loading ? <Loader>Loading...</Loader> : null}
+      {loading ? (<Loader>Loading...</Loader>) : 
+      (
+        <>
+         <Overview>
+          <Description>{info?.description}</Description>
+         </Overview>
+        <Overview>
+          <OverviewItem>
+            <span>Rank: </span>
+            <span>{info?.rank}</span>
+          </OverviewItem>
+          <OverviewItem>
+            <span>Symbol: </span>
+            <span>{info?.symbol}</span>
+          </OverviewItem>
+          </Overview>
+          <Overview>
+          <OverviewItem>
+            <span>Total Supply:</span>
+            <span>{priceInfo?.total_supply}</span>
+          </OverviewItem>
+          <OverviewItem>
+            <span>Max Supply: </span>
+            <span>{priceInfo?.max_supply}</span>
+          </OverviewItem>
+          </Overview>
+          </>
+      )}
     </Container>
   )
 }
