@@ -110,10 +110,14 @@ const Coins = () => {
       <Header>
         <Title>Coins</Title>
       </Header>
-      {loading ? (<Loader>Loading...</Loader>) : (<CoinsList>
+      {loading ? (<Loader>Loading...</Loader>
+    ) : (
+    <CoinsList>
        {coins.map((coin) =>
           (<Coin key={coin.id}>
-            <Link to={`/${coin.id}`}>
+            <Link to={{
+            pathname: `/${coin.id}`,
+            state: {name: coin.name}}}>
               <CoinIcon src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`} alt={coin.name} />
               {coin.name} &rarr;
             </Link>
