@@ -95,7 +95,11 @@ const CoinIcon = styled.img`
     type: string;
   }
 
-const Coins = () => {
+  interface ICoinsProps {
+    toggleDark: () => void;
+  }
+
+const Coins = ({toggleDark}: ICoinsProps) => {
   const { isLoading, data} = useQuery<ICoin[]>("allCoins", fetchCoins);
   // const [ coins, setCoins] = useState<CoinInterface[]>([]);
   // const [loading, setLoading] = useState(true);
@@ -115,6 +119,7 @@ const Coins = () => {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button onClick={toggleDark}>Toggle Mode</button>
       </Header>
       {isLoading ? (<Loader>Loading...</Loader>
     ) : (
