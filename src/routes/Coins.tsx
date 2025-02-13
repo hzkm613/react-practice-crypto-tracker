@@ -22,7 +22,7 @@ const CoinsList = styled.ul``;
 
 const Coin = styled.li`
   background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.textColor};
   padding: 20px;
   margin-bottom: 10px;
   border-radius: 15px;
@@ -113,7 +113,7 @@ const Coins = () => {
         <title>Coins</title>
       </Helmet>
       <Header>
-        <Title>코인</Title>
+        <Title>Coins</Title>
       </Header>
       {isLoading ? (<Loader>Loading...</Loader>
     ) : (
