@@ -7,6 +7,7 @@ import Chart from './Chart';
 import Price from './Price';
 import { useQuery } from 'react-query';
 import { fetchCoinInfo, fetchCoinTickers } from '../api';
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -161,8 +162,11 @@ const Coin = () => {
   // const [info, setInfo] = useState<CoinInfo>();
   // const [priceInfo, setPriceInfo] = useState<PriceInfo>();
   const {isLoading: infoLoading, data: infoData} = useQuery<IInfoData>(["info", coinId], () => fetchCoinInfo(coinId));
-  const {isLoading: tickerLoading, data: tickerData} = useQuery<IPriceData>(["tickers", coinId], () => fetchCoinTickers(coinId));
-  
+  const {isLoading: tickerLoading, data: tickerData} = useQuery<IPriceData>(["tickers", coinId], () => fetchCoinTickers(coinId),
+  {
+    refetchInterval: 5000,
+  });
+
   const loading = infoLoading || tickerLoading;
 
   // Check if I am in the specific URL
@@ -186,6 +190,9 @@ const Coin = () => {
 
   return (
     <Container>
+      <Helmet>
+        <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
+      </Helmet>
       <Header>
         <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
       </Header>

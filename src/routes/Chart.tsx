@@ -18,63 +18,55 @@ interface ChartProps {
 }
 
 function Chart({ coinId }: ChartProps) {
-  const { isLoading, data } = useQuery<IHistory[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId));
-  return (
-    <div>
-      {isLoading ? (
-        "Loading chart..."
-      ) : (
-        // @ts-ignore
-        <ApexChart
-          type="line"
-          series={[
-            {
-              name: "Price",
-              data: data?.map((price) => price.close),
-            },
-          ]}
-          options={{
-            theme: {
-              mode: "dark",
-            },
-            chart: {
-              height: 300,
-              width: 500,
-              toolbar: {
-                show: false,
-              },
-              background: "transparent",
-            },
-            grid: { show: false },
-            stroke: {
-              curve: "smooth",
-              width: 4,
-            },
-            yaxis: {
+  const { isLoading, data } = useQuery<IHistory[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId),
+{ refetchInterval: 10000});
+
+
+return (
+  <div>
+    {isLoading ? (
+      "Loading chart..."
+    ) : data && Array.isArray(data) ? (
+      <ApexChart
+        type="line"
+        series={[
+          {
+            name: "Price",
+            data: data.map((price) => price.close),
+          },
+        ]}
+        options={{
+          theme: {
+            mode: "dark",
+          },
+          chart: {
+            height: 300,
+            width: 500,
+            toolbar: {
               show: false,
             },
-            xaxis: {
-              axisBorder: { show: false },
-              axisTicks: { show: false },
-              labels: { show: false },
-              type: "datetime",
-              categories: data?.map((price) => price.time_close),
-            },
-            fill: {
-              type: "gradient",
-              gradient: { gradientToColors: ["#0be881"], stops: [0, 100] },
-            },
-            colors: ["#0fbcf9"],
-            tooltip: {
-              y: {
-                formatter: (value: number) => `$${value.toFixed(2)}`,
-              },
-            },
-          }}
-        />
-      )}
-    </div>
-  );
+            background: "transparent",
+          },
+          grid: { show: false },
+          stroke: {
+            curve: "smooth",
+            width: 4,
+          },
+          yaxis: {
+            show: false,
+          },
+          xaxis: {
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            labels: { show: false },
+          },
+        }}
+      />
+    ) : (
+      <div><p>Error loading data (Need to subscribe the API to get data for chart)</p></div>
+    )}
+  </div>
+);
 }
 
-export default Chart
+export default Chart;
