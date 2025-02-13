@@ -164,7 +164,7 @@ const Coin = () => {
   const {isLoading: tickerLoading, data: tickerData} = useQuery<IPriceData>(["tickers", coinId], () => fetchCoinTickers(coinId));
   
   const loading = infoLoading || tickerLoading;
-  
+
   // Check if I am in the specific URL
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
@@ -204,6 +204,10 @@ const Coin = () => {
             <span>Symbol: </span>
             <span>{infoData?.symbol}</span>
           </OverviewItem>
+          <OverviewItem>
+            <span>Price: </span>
+            <span>${tickerData?.quotes.USD.price.toFixed(3)}</span>
+          </OverviewItem>
           </Overview>
           <Overview>
           <OverviewItem>
@@ -230,7 +234,7 @@ const Coin = () => {
               <Price />
             </Route>
             <Route path={`/:coinId/chart`}>
-              <Chart />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
           </>
